@@ -30,8 +30,14 @@ class Blockchain{
     }
 
     replaceChain(incoming_chain){
-        if (incoming_chain.length <= this.chain.length) return
-        if (!Blockchain.isValidChain(incoming_chain)) return
+        if (incoming_chain.length <= this.chain.length) {
+            console.log('Invalid chain length detected.')
+            return
+        }
+        if (!Blockchain.isValidChain(incoming_chain)) {
+            console.log('Invalid Chain detected.')
+            return
+        }
         this.chain = incoming_chain
     }
 }
