@@ -1,6 +1,6 @@
 let Block = require('./block')
-let {GENESIS_DATA, MINE_RATE} = require('./config')
-const cryptohash = require('./cryptohash')
+let {GENESIS_DATA, MINE_RATE} = require('../config')
+const cryptohash = require('../util/cryptohash')
 const HTB = require('hex-to-binary')
 
 describe('Block Test: ', ()=>{
