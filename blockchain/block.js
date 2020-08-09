@@ -44,8 +44,8 @@ class Block{
     static adjustDiff({og_block, timestamp}) {
         const {difficulty} = og_block
         if (difficulty < 1) return 1
-        if (timestamp - og_block.timestamp > MINE_RATE) return difficulty - 1
-        return difficulty + 1
+        if (timestamp - og_block.timestamp > MINE_RATE) return difficulty - 1  // if the new block is mined after the MINE_RATE interval means 
+        return difficulty + 1                                                   // that mining is too slow: hence reduce the difficulty
     }
 }
 
