@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const PubSub = require('./app/pubsub');
 const TransactionPool = require('./wallet/transactionPool');
 const Wallet = require('./wallet')
+const TransactionMiner = require('./app/transactionMiner');
 const DEFAUT_PORT = 3000;
  
 const app = express();
@@ -12,6 +13,7 @@ const blockchain = new Blockchain();
 const transactionPool = new TransactionPool();
 const wallet = new Wallet();
 const pubsub = new PubSub({blockchain, transactionPool})
+const transactionMiner = new TransactionMiner({pubsub, wallet, transactionPool, blockchain});
 
 const RNA = `http://localhost:${DEFAUT_PORT}` //Root Node Address
 
@@ -23,6 +25,16 @@ app.get('/api/blocks', (req, res)=>{
 
 app.get('/api/t_pool_map', (req, res)=>{
     res.json(transactionPool.transactionMap);
+})
+
+app.get('/api/mine-transactions', (req, res)=>{
+    transactionMiner.mineTransactions();
+    res.redirect('/api/blocks')
+})
+
+app.get('/api/wallet-info', (req, res)=>{
+    address = wallet.publicKey;
+    res.json({address, balance:Wallet.calculateBalance({chain:blockchain.chain, address})})
 })
 
 app.post('/api/mine', (req, res)=>{
@@ -45,6 +57,7 @@ app.post('/api/transact',(req,res)=>{
         transaction = wallet.createTransaction({
             recipient,
             amountToBePaid,
+            chain:blockchain.chain
         });
         }
     } catch(error) {

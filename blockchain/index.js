@@ -1,5 +1,8 @@
 const Block = require('./block');
 const cryptohash = require('../util/cryptohash');
+const { REWARD_INPUT, MINING_REWARD } = require('../config');
+const Transaction = require('../wallet/transaction');
+const Wallet = require('../wallet');
 
 class Blockchain{
     
@@ -29,7 +32,7 @@ class Blockchain{
         return true
     }
 
-    replaceChain(incoming_chain){
+    replaceChain(incoming_chain, validateTransactions, onSuccess){
         if (incoming_chain.length <= this.chain.length) {
             console.log('Invalid chain length detected.')
             return
@@ -38,7 +41,58 @@ class Blockchain{
             console.log('Invalid Chain detected.')
             return
         }
+        if(validateTransactions && !this.validTransactionData({chain})){
+            console.log('Err. Invalid transaction data detected')
+            return 
+        }
+
+        if (onSuccess) onSuccess();
         this.chain = incoming_chain
+    }
+
+    validTransactionData({chain}){
+        for (let i = 1; i < chain.length; i++) {
+            const block = chain[i];
+            let rewardTxnCount = 0;
+            const transactionSet = new Set();
+            for (let transaction of block.data) {
+                if (transaction.input.address === REWARD_INPUT.address){
+                    rewardTxnCount += 1;
+                    if (rewardTxnCount >1){
+                        console.log('Err. Miner rewards limit exceeded');
+                        return false;
+                    }
+                    if (Object.values(transaction.outputMap)[0]!== MINING_REWARD){
+                        console.log('Err. Inconsistent Mining Reward value')
+                        return false
+                    }
+                } else {
+                    if (!Transaction.validTransaction(transaction)){
+                        console.log('Err. Invalid Transaction Data provided')
+                        return false;
+                    }
+
+                    if (transactionSet.has(transaction)){
+                        console.log('Err. Identical transactions Detected')
+                        return false;
+                    } else {
+                        transactionSet.add(transaction);
+                    }
+                   
+                    const trueBalance = Wallet.calculateBalance({
+                        chain:this.chain,
+                        address:transaction.input.address
+                    });
+                    
+                    if (transaction.input.balance!==trueBalance){
+                        console.log('Err. Invalid Balance detected')
+                        return false
+                    }
+                }
+            }
+            
+        }
+        return true;
     }
 }
 
