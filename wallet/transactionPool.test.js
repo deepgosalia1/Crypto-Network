@@ -4,10 +4,10 @@ const Blockchain = require('../blockchain');
 const Wallet = require('./index');
 
 describe('Transaction Pool Testing', ()=>{
-    let transactionPool, transaction;
+    let transactionPool, transaction, senderWallet;
     beforeEach(()=>{
         transactionPool = new TransactionPool();
-        senderWallet = new Wallet()
+        senderWallet = new Wallet();
         transaction = new Transaction({senderWallet, recipient:'A-new-Recipient', amountToBePaid:50});
     });
 

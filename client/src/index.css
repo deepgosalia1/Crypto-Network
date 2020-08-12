@@ -1,0 +1,43 @@
+body{
+    background-color:#444;
+    color: aliceblue;
+    text-align: center;
+    font-size: 20px;
+    font-family: 'Baloo Tamma 2', cursive;
+    padding-top: 5%;
+    word-wrap: break-word;
+}
+
+.logo{
+    width: 250px;
+    height: 250px;
+}
+
+.WalletInfo{
+    width: 75%;
+}
+
+.Block{
+    border: 1px solid #fff;
+    padding: 8%;
+    margin: 5%;
+}
+
+.App{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.Transaction{
+     padding:5%;
+}
+/* a, a:hover{
+    color: #e666;
+    text-decoration: underline;
+} */
+
+.ConductTransaction, .TransactionPool{
+    margin: 10%;
+    padding:10%;
+}
