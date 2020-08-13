@@ -15,7 +15,7 @@ const app = express();
 const blockchain = new Blockchain();
 const transactionPool = new TransactionPool();
 const wallet = new Wallet();
-const pubsub = new PubSub({ blockchain, transactionPool, redisUrl:REDIS_URL })
+const pubsub = new PubSub({ blockchain, transactionPool, redisUrl: REDIS_URL })
 const transactionMiner = new TransactionMiner({ pubsub, wallet, transactionPool, blockchain });
 
 
@@ -38,6 +38,37 @@ app.get('/api/mine-transactions', (req, res) => {
 
 app.get('/api/wallet-info', (req, res) => {
     address = wallet.publicKey;
+    res.json({ address, balance: Wallet.calculateBalance({ chain: blockchain.chain, address }) })
+})
+
+app.get('/api/known-addresses', (req, res) => {
+    const addressMap = {};
+
+    for (let block of blockchain.chain) {
+        for (let transaction of block.data) {
+            const recipients = Object.keys(transaction.outputMap);
+            recipients.forEach(recipient => addressMap[recipient] = recipient);
+        }
+    }
+    res.json(Object.values(addressMap));
+})
+
+app.get('/api/blocks/length', (req, res) => {
+    res.json(blockchain.chain.length);
+})
+
+
+app.get('/api/blocks/:id', (req, res) => {
+
+    const { id } = req.params;
+    const { length } = blockchain.chain;
+    let startIndex = (id - 1) * 5;
+    let endIndex = id * 5;
+    startIndex = startIndex < length ? startIndex : length
+    endIndex = endIndex < length ? endIndex : length
+    const blocksReversed = blockchain.chain.slice().reverse();
+    res.json(blocksReversed.slice(startIndex,endIndex))
+
     res.json({ address, balance: Wallet.calculateBalance({ chain: blockchain.chain, address }) })
 })
 
