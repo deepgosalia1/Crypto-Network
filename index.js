@@ -69,7 +69,6 @@ app.get('/api/blocks/:id', (req, res) => {
     const blocksReversed = blockchain.chain.slice().reverse();
     res.json(blocksReversed.slice(startIndex,endIndex))
 
-    res.json({ address, balance: Wallet.calculateBalance({ chain: blockchain.chain, address }) })
 })
 
 app.get('*', (req, res) => {
