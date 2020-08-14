@@ -1,3 +1,4 @@
+const title = "CryptoNetwork"
 const welcome = "Welcome! to the demo blockchain implemented purely on Javascript!"
 const welcome2 = " It features secure transactions, mining your own blocks, and exporing other known addresses in the system!"
 const notes = [
@@ -23,4 +24,4 @@ const steps = [
         id: "3",
         text: "Once you have mined, you can then view your transaction published in the ledger at `Mined Blocks` page. (most recent blocks first)"
     },]
-module.exports = { welcome, welcome2, notes, steps };
+module.exports = { title, welcome, welcome2, notes, steps };

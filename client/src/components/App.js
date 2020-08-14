@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from '../assets/bc.jpg';
 import { Link } from 'react-router-dom';
-import { welcome, welcome2, notes, steps } from '../assets/welcome'
+import { welcome, welcome2, notes, steps, title } from '../assets/welcome'
 class App extends Component {
     state = {
         walletInfo: {}
@@ -20,18 +20,18 @@ class App extends Component {
 
             <div className='App'>
                 <img src={logo} className='logo' />
+                <h2>{title}</h2>
                 <h2>{welcome}</h2>
                 <h3>{welcome2}</h3>
                 <br />
                 <div><Link to='/blocks'> Mined Blocks </Link></div>
                 <div><Link to='/conduct-transaction'> Perform Transaction </Link></div>
-                <br />
+                {/* <br /> */}
                 <div><h3>Your Blockchain Wallet information</h3></div>
                 <div className='WalletInfo'>
                     <div><u>Address</u> := {address}</div>
                     <div><u>Balance</u> := {balance}</div>
                 </div>
-                <br />
                 <br />
                 <h4> <b>Steps:</b>
                     {
@@ -42,7 +42,6 @@ class App extends Component {
                         })
                     }
                 </h4>
-                <br />
                 <br />
                 <h4> <b>Notes:</b>
                     {
